@@ -196,4 +196,4 @@ Created with ❤️ & ☕ by [J.P. Behler](https://www.linkedin.com/in/juanpablo
 
 ## 🫀 Donate
 
-If you really appreciate it, consider buying me a [Coffee](https://github.com/juampignr/partner). Remember we developers turn coffee into apps 😆
+If you really appreciate it, consider buying me a [Coffee](https://buymeacoffee.com/jpbehler). Remember we developers turn coffee into apps 😆
