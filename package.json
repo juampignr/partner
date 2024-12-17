@@ -1,0 +1,30 @@
+{
+  "name": "@jpbehler/partner",
+  "version": "0.1.13",
+  "description": "A friendly and digestible way to using OpenAI Assistants API",
+  "main": "./src/index.mjs",
+  "scripts": {
+    ".": "node --no-warnings ./src/interactive.mjs",
+    "start": "node --no-warnings ./src/interactive.mjs",
+    "dev": "node --no-warnings ./src/interactive.mjs",
+    "stop": "kill -9 $(pgrep -f 'node --no-warnings ./src/interactive.mjs')"
+  },
+  "keywords": [
+    "openai",
+    "chatgpt",
+    "copilot",
+    "mistral",
+    "llama",
+    "gpt4all",
+    "ai",
+    "sdk",
+    "chat"
+  ],
+  "author": "jpBehler",
+  "license": "ISC",
+  "dependencies": {
+    "@inquirer/prompts": "^6.0.1",
+    "chalk": "^5.3.0",
+    "openai": "^4.63.0"
+  }
+}
