@@ -507,7 +507,7 @@ let partnerInstance = new partner({
 
 let partnerInstance = new partner([
   {
-    apiKey: "sk-proj-***",
+    apiKey: "Your API key",
     assistantParams: {
       name: "Salesman",
       instructions: CUSTOM_FITNESS_SM,
@@ -516,7 +516,7 @@ let partnerInstance = new partner([
     },
   },
   {
-    apiKey: "sk-proj-***",
+    apiKey: "Your API key",
     assistantParams: {
       name: "Salesman",
       instructions: DEFAULT_ASSIST_SM,

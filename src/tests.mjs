@@ -6,7 +6,7 @@ import { input, checkbox } from "@inquirer/prompts";
 import partner from "./partner.mjs";
 
 const openai = new OpenAI({
-  apiKey: "sk-proj-***",
+  apiKey: "Your API key",
 });
 
 let RUN;
@@ -516,7 +516,7 @@ let partnerInstance = new partner([
     },
   },
   {
-    apiKey: "sk-proj-***",
+    apiKey: "Your API key",
     assistantParams: {
       name: "Salesman",
       instructions: DEFAULT_ASSIST_SM,

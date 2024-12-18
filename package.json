@@ -1,6 +1,6 @@
 {
   "name": "@jpbehler/partner",
-  "version": "0.1.13",
+  "version": "0.2.6",
   "description": "A friendly and digestible way to using OpenAI Assistants API",
   "main": "./src/index.mjs",
   "scripts": {
@@ -8,6 +8,9 @@
     "start": "node --no-warnings ./src/interactive.mjs",
     "dev": "node --no-warnings ./src/interactive.mjs",
     "stop": "kill -9 $(pgrep -f 'node --no-warnings ./src/interactive.mjs')"
+  },
+  "bin": {
+    "partner": "./src/interactive.mjs"
   },
   "keywords": [
     "openai",

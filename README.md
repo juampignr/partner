@@ -26,6 +26,16 @@ npm install @jpbehler/partner
 
 ---
 
+## 🧑‍💻 CLI/Command
+
+Just execute this command to start using the interactive command:
+
+```bash
+npx @jpbehler/partner
+```
+
+---
+
 ## 🛠️ Usage
 
 ### Quick Start

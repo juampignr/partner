@@ -90,8 +90,14 @@ export default class partner extends EventEmitter {
         element.assistantParams["instructions"] =
           `${element.assistantParams["instructions"]}\n(You must make use of the provided files and functions during the conversation)`;
       }
-    } else {
+    } else if (typeof options === "object") {
       this.options = options;
+      this.options.assistantParams["instructions"] =
+        `${this.options.assistantParams["instructions"]}\n(You must make use of the provided files and functions during the conversation)`;
+    } else {
+      warn(
+        `Partner instance options must be an object or list of objects: ${typeof options}`,
+      );
     }
 
     this.apiKey = this.options.apiKey ?? "";
@@ -190,9 +196,14 @@ export default class partner extends EventEmitter {
     const rawFile = await readFile("./memory.json");
 
     let jsonObject = JSON.parse(rawFile);
-    jsonObject[`memory${Date.now()}`] = data;
+    show(data);
+    show(Object.values(jsonObject));
 
-    await writeFile("./memory.json", JSON.stringify(jsonObject));
+    if (!Object.values(jsonObject).includes(data)) {
+      jsonObject[`memory${Date.now()}`] = data;
+
+      await writeFile("./memory.json", JSON.stringify(jsonObject));
+    }
   }
 
   async #storeOnLongTerm(data) {
@@ -233,10 +244,11 @@ export default class partner extends EventEmitter {
       }
 
       // Upload the file and poll for the result
-      await this.client.beta.vectorStores.fileBatches.uploadAndPoll(
+      const res = await this.client.beta.vectorStores.fileBatches.uploadAndPoll(
         this.vectorStore.id,
         { files: [createReadStream(filePath, { encoding: "utf8" })] }, // Pass the file correctly
       );
+
       await this.client.beta.assistants.update(this.assistantId, {
         tool_resources: {
           file_search: { vector_store_ids: [this.vectorStore.id] },
@@ -251,7 +263,7 @@ export default class partner extends EventEmitter {
 
   async sendMessage(message, whisper = false) {
     try {
-      if (message) {
+      if (message && typeof message === "string") {
         if (message === "<done>") throw message;
 
         await this.client.beta.threads.messages.create(this.threadId, {
@@ -278,6 +290,8 @@ export default class partner extends EventEmitter {
               return event.data?.content[0].text.value;
           }
         }
+      } else {
+        warn("Message must be a non-empty string!");
       }
     } catch (error) {
       if (error === "<done>") {
@@ -302,27 +316,34 @@ export default class partner extends EventEmitter {
 
   async respondRequest(response) {
     try {
-      const runId = response.request.id;
-      const callId =
-        response.request.required_action.submit_tool_outputs.tool_calls[0].id;
+      if (typeof response === "object") {
+        const runId = response?.request?.id;
+        const callId =
+          response?.request?.required_action?.submit_tool_outputs?.tool_calls[0]
+            .id;
 
-      const stream = this.client.beta.threads.runs.submitToolOutputsStream(
-        this.threadId,
-        runId,
-        {
-          tool_outputs: [
-            {
-              tool_call_id: callId,
-              output: JSON.stringify({
-                status: response?.status ?? "success",
-                response: response?.response ?? "ready",
-              }),
-            },
-          ],
-        },
-      );
-      for await (const event of stream) {
-        this.emit("event", event);
+        const stream = this.client.beta.threads.runs.submitToolOutputsStream(
+          this.threadId,
+          runId,
+          {
+            tool_outputs: [
+              {
+                tool_call_id: callId,
+                output: JSON.stringify({
+                  status: response?.status ?? "success",
+                  response: response?.response ?? "ready",
+                }),
+              },
+            ],
+          },
+        );
+        for await (const event of stream) {
+          this.emit("event", event);
+        }
+      } else {
+        warn(
+          `Response must be an object containing "request", "status" and "response" keys`,
+        );
       }
     } catch (error) {
       warn(`Error submitting tool outputs: ${error.stack}`);
